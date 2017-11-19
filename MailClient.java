@@ -11,6 +11,8 @@ public class MailClient
     private MailServer server;
     // The user running this client.
     private String user;
+    // The last received message.
+    private MailItem ultimoEmail;
 
     /**
      * Create a mail client run by user and attached to the given server.
@@ -26,7 +28,9 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        return server.getNextMailItem(user);
+        MailItem item = server.getNextMailItem(user);
+        ultimoEmail = item;
+        return item;
     }
 
     /**
@@ -40,6 +44,7 @@ public class MailClient
             System.out.println("No new mail.");
         }
         else {
+            ultimoEmail = item;
             item.print();
         }
     }
@@ -63,5 +68,19 @@ public class MailClient
     public void totalMessage()
     {
         System.out.println("Tiene estos mensajes: " + server.howManyMailItems(user));
+    }
+    
+    /**
+     * Método añadido que permite imprimir por pantalla el último mensaje
+     * tantas veces como se desee (Funcionalidad 02 - Aitor Martínez)
+     */
+    public void imprimirUltimoMensaje()
+    {
+        if(ultimoEmail == null) {
+            System.out.println("Error");
+        }
+        else{ 
+            ultimoEmail.print();  
+        }
     }
 }
