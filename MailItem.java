@@ -47,6 +47,14 @@ public class MailItem
     {
         return to;
     }
+    
+    /**
+     * @return The subject of this message.
+     */
+    public String getSubject()
+    {
+        return subject;
+    }
 
     /**
      * @return The text of the message.

@@ -60,7 +60,7 @@ public class MailClient
         MailItem item = new MailItem(user, to, subject, message);
         server.post(item);
     }
-    
+
     /**
      * Método que muestra por pantalla el número de correos electrónicos que tiene un usuario
      * en el servidor. -- Funcionalidad 01 (Lorena Alonso)
@@ -69,7 +69,7 @@ public class MailClient
     {
         System.out.println("Tiene estos mensajes: " + server.howManyMailItems(user));
     }
-    
+
     /**
      * Método añadido que permite imprimir por pantalla el último mensaje
      * tantas veces como se desee (Funcionalidad 02 - Aitor Martínez)
@@ -81,6 +81,28 @@ public class MailClient
         }
         else{ 
             ultimoEmail.print();  
+        }
+    }
+
+    /**
+     * Método que cuando se invoque permita descargar del servidor el siguiente mensaje del usuario
+     * y responda automáticamente al emisor con una frase indicando que hemos recibido su correo y
+     * dándole las gracias. Si no hay ningún mensaje para el usuario el método no hace nada 
+     * e informa de la situación por pantalla.(Funcionalidad 03 - Diego Almonte)
+     */
+    public void getDownload()
+    {
+        MailItem item = server.getNextMailItem(user);
+        if (item == null){
+            System.out.println("No hay ningun mensaje");
+        }
+        else
+        {
+            String gracias = "He recibido tu mensaje, gracias\n" + item.getMessage();
+            String asuntoOriginal = "Re: " + item.getSubject();
+            sendMailItem(item.getFrom(), asuntoOriginal, gracias);
+            ultimoEmail = item;
+            item.print();            
         }
     }
 }
