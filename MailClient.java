@@ -55,4 +55,13 @@ public class MailClient
         MailItem item = new MailItem(user, to, subject, message);
         server.post(item);
     }
+    
+    /**
+     * Método que muestra por pantalla el número de correos electrónicos que tiene un usuario
+     * en el servidor. -- Funcionalidad 01 (Lorena Alonso)
+     */
+    public void totalMessage()
+    {
+        System.out.println("Tiene estos mensajes: " + server.howManyMailItems(user));
+    }
 }
