@@ -13,6 +13,12 @@ public class MailClient
     private String user;
     // The last received message.
     private MailItem ultimoEmail;
+    // Total de mensajes recibidos.
+    private int recibidos;
+    // Total de mensajes enviados.
+    private int enviados;
+    // El último mensaje más largo recibido por el usuario.
+    private MailItem mensajeMasLargo;
 
     /**
      * Create a mail client run by user and attached to the given server.
@@ -21,6 +27,9 @@ public class MailClient
     {
         this.server = server;
         this.user = user;
+        this.recibidos = 0;
+        this.enviados = 0;
+        this.mensajeMasLargo = new MailItem("","","","");
     }
 
     /**
@@ -36,7 +45,11 @@ public class MailClient
             item = null;
         }
         else{
+            if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
+                mensajeMasLargo = item;
+            }
             ultimoEmail = item;
+            recibidos++;
         }
         return item;
     }
@@ -57,6 +70,10 @@ public class MailClient
         else{
             ultimoEmail = item;
             item.print();
+            recibidos++;
+            if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
+                mensajeMasLargo = item;
+            }
         }
     }
 
@@ -70,6 +87,9 @@ public class MailClient
     {
         MailItem item = new MailItem(user, to, subject, message);
         server.post(item);
+        if(!item.detectSpam()){
+            enviados++;
+        }
     }
 
     /**
@@ -116,7 +136,25 @@ public class MailClient
             String asuntoOriginal = "Re: " + item.getSubject();
             sendMailItem(item.getFrom(), asuntoOriginal, gracias);
             ultimoEmail = item;
-            item.print();            
+            item.print();
+            recibidos++;
+            if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
+                mensajeMasLargo = item;
+            }
+        }
+    }
+
+    /**
+     * Método que muetra por pantalla el total de mensajes recibidos y enviados por un usuario. 
+     * También muestra la dirección de correo del usuario que envió el último mensaje más largo y el
+     * número de caracteres del mismo. (Funcionalidad 05 - Aitor Díez)
+     */
+    public void datosMensajes(){
+        System.out.println("Total de mensaje recibidos por "+ user + ": " + recibidos + ".");
+        System.out.println("Total de mensaje enviados por "+ user + ": " + enviados + ".");
+        if(recibidos > 0){
+            System.out.println(mensajeMasLargo.getFrom() + " ha enviado el mensaje más largo, con un total de " +
+                mensajeMasLargo.getMessage().length() + " caracteres.");
         }
     }
 }
