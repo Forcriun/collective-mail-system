@@ -73,4 +73,20 @@ public class MailItem
         System.out.println("To: " + to);
         System.out.println("Message: " + message);
     }
+    
+    /**
+     * Método que permite detectar la presencia de los términos considerados como spam
+     * ("viagra" y "regalo"), en cualquiera de sus posibles variantes, en los mensajes de correo.
+     * 
+     * Funcionalidad 04 - Dídac Fernández
+     */
+    public boolean detectSpam()
+    {
+        boolean spam = false;
+        if((message.matches(".*(V|v)(I|i)(A|a|)(G|g)(R|r)(A|a).*"))||
+        (message.matches(".*(R|r)(E|e)(G|g)(A|a)(L|l)(O|o).*"))){
+            spam = true;
+        }
+        return spam;
+    }
 }

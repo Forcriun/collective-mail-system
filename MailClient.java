@@ -29,7 +29,15 @@ public class MailClient
     public MailItem getNextMailItem()
     {
         MailItem item = server.getNextMailItem(user);
-        ultimoEmail = item;
+        if(item == null){
+            System.out.println("No new mail.");
+        }
+        else if(item.detectSpam()){
+            item = null;
+        }
+        else{
+            ultimoEmail = item;
+        }
         return item;
     }
 
@@ -40,10 +48,13 @@ public class MailClient
     public void printNextMailItem()
     {
         MailItem item = server.getNextMailItem(user);
-        if(item == null) {
+        if(item == null){
             System.out.println("No new mail.");
         }
-        else {
+        else if(item.detectSpam()){
+            System.out.println("El mensaje es spam");
+        }
+        else{
             ultimoEmail = item;
             item.print();
         }
@@ -95,6 +106,9 @@ public class MailClient
         MailItem item = server.getNextMailItem(user);
         if (item == null){
             System.out.println("No hay ningun mensaje");
+        }
+        else if(item.detectSpam()){
+            System.out.println("El mensaje es spam");
         }
         else
         {
