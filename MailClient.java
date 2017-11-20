@@ -121,25 +121,32 @@ public class MailClient
      * dándole las gracias. Si no hay ningún mensaje para el usuario el método no hace nada 
      * e informa de la situación por pantalla.(Funcionalidad 03 - Diego Almonte)
      */
-    public void getDownload()
-    {
+    public void getDownload(){
+        String gracias = "He recibido tu mensaje, gracias\n ";
         MailItem item = server.getNextMailItem(user);
         if (item == null){
             System.out.println("No hay ningun mensaje");
         }
-        else if(item.detectSpam()){
-            System.out.println("El mensaje es spam");
-        }
-        else
-        {
-            String gracias = "He recibido tu mensaje, gracias\n" + item.getMessage();
-            String asuntoOriginal = "Re: " + item.getSubject();
-            sendMailItem(item.getFrom(), asuntoOriginal, gracias);
-            ultimoEmail = item;
-            item.print();
-            recibidos++;
-            if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
-                mensajeMasLargo = item;
+        else{
+            if(item.detectSpam()){
+                System.out.println("El mensaje es spam");
+            }
+            else{
+                if(item.getMessage().length() >=3){
+                    String message = item.decryptMessage();
+                    gracias = gracias + message;
+                }
+                else{
+                    gracias = gracias + item.getMessage();
+                }
+                String asuntoOriginal = "Re: " + item.getSubject();
+                sendMailItem(item.getFrom(), asuntoOriginal, gracias);
+                ultimoEmail = item;
+                item.print();
+                recibidos++;
+                if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
+                    mensajeMasLargo = item;
+                }
             }
         }
     }
@@ -155,6 +162,24 @@ public class MailClient
         if(recibidos > 0){
             System.out.println(mensajeMasLargo.getFrom() + " ha enviado el mensaje más largo, con un total de " +
                 mensajeMasLargo.getMessage().length() + " caracteres.");
+        }
+    }
+
+    /**
+     * Método que permite enviar los mensajes encriptados, reemplazando las vocales del texto por
+     * símbolos determinados. Todo mensaje encriptado se caracteriza por comenzar por la cadena "?=?"
+     * 
+     * Funcionalidad 06 - Cristian Martínez
+     */
+    public void sendMailItemEncrypted(String to, String subject, String message){
+        //Creates a new email object
+        MailItem item = new MailItem(user, to, subject, message);
+        //Encrypts the message
+        item.encryptMessage();
+        //Sends it
+        server.post(item);
+        if(!item.detectSpam()){
+            enviados++;
         }
     }
 }

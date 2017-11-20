@@ -71,7 +71,14 @@ public class MailItem
     {
         System.out.println("From: " + from);
         System.out.println("To: " + to);
-        System.out.println("Message: " + message);
+        System.out.println("Subject: " + subject);
+        if (message.length() < 3){
+            System.out.println("Message: " + message);
+        }
+        else{
+            decryptMessage();
+            System.out.println("Message: " + message);
+        }
     }
     
     /**
@@ -83,10 +90,36 @@ public class MailItem
     public boolean detectSpam()
     {
         boolean spam = false;
-        if((message.matches(".*(V|v)(I|i)(A|a|)(G|g)(R|r)(A|a).*"))||
-        (message.matches(".*(R|r)(E|e)(G|g)(A|a)(L|l)(O|o).*"))){
+        if((message.matches(".*(V|v)(I|i|.*\\<|.*\\#)(A|a|.*\\¡|.*\\$)(G|g)(R|r)(A|a|.*\\¡|.*\\$).*"))||
+        (message.matches(".*(R|r)(E|e|.*\\¬|.*\\&)(G|g)(A|a|.*\\¡|.*\\$)(L|l)(O|o|.*\\>|.*\\+).*"))){
             spam = true;
         }
         return spam;
+    }
+
+    /**
+     * Módulo de ENCRIPTADO -- F06
+     */
+    public void encryptMessage(){
+        String vowels[] = {"A", "a", "E", "e", "I", "i", "O", "o", "U", "u"};
+        String vowelsEncrypted[] = {"\\¡", "\\$", "\\¬", "\\&", "\\<", "\\#", "\\>", "\\+", "\"", "\\*"};
+        for (int i = 0; i < vowels.length; i++){
+            message = message.replace(vowels[i], vowelsEncrypted[i]);
+        }
+        message = "?=? " + message;
+    }
+
+    /**
+     * Módulo de DESENCRIPTADO -- F06
+     */
+    public String decryptMessage(){
+        if (message.substring(0,3).equals("?=?")){
+            String vowels[] = {"A", "a", "E", "e", "I", "i", "O", "o", "U", "u"};
+            String vowelsEncrypted[] = {"\\¡", "\\$", "\\¬", "\\&", "\\<", "\\#", "\\>", "\\+", "\"", "\\*"};
+            for (int i = 0; i < vowels.length; i++){
+                message = message.replace(vowelsEncrypted[i], vowels[i]);
+            }
+        }
+        return message;
     }
 }
