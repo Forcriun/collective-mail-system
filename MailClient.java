@@ -122,7 +122,7 @@ public class MailClient
      * e informa de la situación por pantalla.(Funcionalidad 03 - Diego Almonte)
      */
     public void getDownload(){
-        String gracias = "He recibido tu mensaje, gracias\n ";
+        String gracias = "He recibido tu mensaje, gracias\n";
         MailItem item = server.getNextMailItem(user);
         if (item == null){
             System.out.println("No hay ningun mensaje");
