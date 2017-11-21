@@ -7,22 +7,22 @@
  */
 public class MailItem
 {
-    // The sender of the item.
+    // El emisor del mensaje.
     private String from;
-    // The intended recipient.
+    // El receptor del mensaje.
     private String to;
-    // The subject of the message.
+    // El asunto del mensaje.
     private String subject;
-    // The text of the message.
+    // El texto del mensaje.
     private String message;
 
     /**
-     * Create a mail item from sender to the given recipient,
-     * containing the given message with its corresponding subject.
-     * @param from The sender of this item.
-     * @param to The intended recipient of this item.
-     * @param subject The subject of the message to be sent.
-     * @param message The text of the message to be sent.
+     * Constructor de la claseo MailItem.
+     * 
+     * @param from El emisor del correo.
+     * @param to El receptor del correo.
+     * @param subject El asunto del mensaje.
+     * @param message El texto del mensaje.
      */
     public MailItem(String from, String to, String subject, String message)
     {
@@ -33,7 +33,7 @@ public class MailItem
     }
 
     /**
-     * @return The sender of this message.
+     * @return Devuelve el emisor.
      */
     public String getFrom()
     {
@@ -41,15 +41,15 @@ public class MailItem
     }
 
     /**
-     * @return The intended recipient of this message.
+     * @return Decuelve el destinatario del mensaje.
      */
     public String getTo()
     {
         return to;
     }
-    
+
     /**
-     * @return The subject of this message.
+     * @return Devuelve el asunto del mensaje.
      */
     public String getSubject()
     {
@@ -57,7 +57,7 @@ public class MailItem
     }
 
     /**
-     * @return The text of the message.
+     * @return Devuelve el texto del mensaje.
      */
     public String getMessage()
     {
@@ -65,7 +65,9 @@ public class MailItem
     }
 
     /**
-     * Print this mail message to the text terminal.
+     * Imprime el mensaje de correo por pantalla.
+     * 
+     * Implementa encriptación y desencriptación (F06)
      */
     public void print()
     {
@@ -80,7 +82,7 @@ public class MailItem
             System.out.println("Message: " + message);
         }
     }
-    
+
     /**
      * Método que permite detectar la presencia de los términos considerados como spam
      * ("viagra" y "regalo"), en cualquiera de sus posibles variantes, en los mensajes de correo.
@@ -98,7 +100,7 @@ public class MailItem
     }
 
     /**
-     * Módulo de ENCRIPTADO -- F06
+     * Módulo de ENCRIPTADO -- F06 -- Cristian Martínez
      */
     public void encryptMessage(){
         String vowels[] = {"A", "a", "E", "e", "I", "i", "O", "o", "U", "u"};
@@ -110,7 +112,7 @@ public class MailItem
     }
 
     /**
-     * Módulo de DESENCRIPTADO -- F06
+     * Módulo de DESENCRIPTADO -- F06 -- Cristian Martínez
      */
     public String decryptMessage(){
         if (message.substring(0,3).equals("?=?")){

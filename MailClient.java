@@ -7,11 +7,11 @@
  */
 public class MailClient
 {
-    // The server used for sending and receiving.
+    // El servidor usado para recibir y enviar los mensajes.
     private MailServer server;
-    // The user running this client.
+    // El usuario que utiliza este cliente.
     private String user;
-    // The last received message.
+    // El último mensaje recibido.
     private MailItem ultimoEmail;
     // Total de mensajes recibidos.
     private int recibidos;
@@ -21,7 +21,7 @@ public class MailClient
     private MailItem mensajeMasLargo;
 
     /**
-     * Create a mail client run by user and attached to the given server.
+     * Constructor de la clase MailClient.
      */
     public MailClient(MailServer server, String user)
     {
@@ -33,7 +33,10 @@ public class MailClient
     }
 
     /**
-     * Return the next mail item (if any) for this user.
+     * Devuelve el siguiente correo electrónico (si lo hay) del usuario. Si el
+     * mensaje contiene spam no lo descarga y devuelve null
+     * 
+     * Implementa F02, F04 y F05
      */
     public MailItem getNextMailItem()
     {
@@ -55,8 +58,10 @@ public class MailClient
     }
 
     /**
-     * Print the next mail item (if any) for this user to the text 
-     * terminal.
+     * Descarga e imprime el siguiente correo electrónico (si lo hay) del usuario.
+     * Si contiene spam no lo descarga y avisa por pantalla.
+     * 
+     * Implementa F02, F04 y F05
      */
     public void printNextMailItem()
     {
@@ -65,11 +70,12 @@ public class MailClient
             System.out.println("No new mail.");
         }
         else if(item.detectSpam()){
-            System.out.println("El mensaje es spam");
+            System.out.println("El mensaje es spam"); // F04
         }
         else{
-            ultimoEmail = item;
+            ultimoEmail = item; // F02
             item.print();
+            // F05
             recibidos++;
             if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
                 mensajeMasLargo = item;
@@ -78,17 +84,18 @@ public class MailClient
     }
 
     /**
-     * Send the given message to the given recipient via
-     * the attached mail server.
-     * @param to The intended recipient.
-     * @param message The text of the message to be sent.
+     * Envía un mensaje al destinatario indicado a través del servidor adjunto.
+     * 
+     * @param to El destinatario previsto.
+     * @param subject El asunto del mensaje.
+     * @param message El texto del mensaje a ser enviado.
      */
     public void sendMailItem(String to,String subject, String message)
     {
         MailItem item = new MailItem(user, to, subject, message);
         server.post(item);
         if(!item.detectSpam()){
-            enviados++;
+            enviados++; // F04
         }
     }
 
@@ -102,7 +109,7 @@ public class MailClient
     }
 
     /**
-     * Método añadido que permite imprimir por pantalla el último mensaje
+     * Método añadido que permite imprimir por pantalla el último mensaje (si lo hay)
      * tantas veces como se desee (Funcionalidad 02 - Aitor Martínez)
      */
     public void imprimirUltimoMensaje()
@@ -120,6 +127,8 @@ public class MailClient
      * y responda automáticamente al emisor con una frase indicando que hemos recibido su correo y
      * dándole las gracias. Si no hay ningún mensaje para el usuario el método no hace nada 
      * e informa de la situación por pantalla.(Funcionalidad 03 - Diego Almonte)
+     * 
+     * Considera el spam y el encriptado/desencriptado de mensaje y automensaje.
      */
     public void getDownload(){
         String gracias = "He recibido tu mensaje, gracias\n";
@@ -129,9 +138,10 @@ public class MailClient
         }
         else{
             if(item.detectSpam()){
-                System.out.println("El mensaje es spam");
+                System.out.println("El mensaje es spam"); // F04
             }
             else{
+                // F06
                 if(item.getMessage().length() >=3){
                     String message = item.decryptMessage();
                     gracias = gracias + message;
@@ -143,6 +153,7 @@ public class MailClient
                 sendMailItem(item.getFrom(), asuntoOriginal, gracias);
                 ultimoEmail = item;
                 item.print();
+                // F05
                 recibidos++;
                 if(item.getMessage().length() >= mensajeMasLargo.getMessage().length()){
                     mensajeMasLargo = item;
@@ -172,11 +183,9 @@ public class MailClient
      * Funcionalidad 06 - Cristian Martínez
      */
     public void sendMailItemEncrypted(String to, String subject, String message){
-        //Creates a new email object
         MailItem item = new MailItem(user, to, subject, message);
-        //Encrypts the message
+        //Encripta el mensaje
         item.encryptMessage();
-        //Sends it
         server.post(item);
         if(!item.detectSpam()){
             enviados++;
